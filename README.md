@@ -1,6 +1,6 @@
 # RestaurantIQ: AI-Powered Discovery Platform
 
-A full-stack, AI-powered restaurant discovery and lead management platform built for the Day 5 Technical Assessment.
+A full-stack, AI-powered restaurant discovery and lead management platform.
 
 ## 🚀 Features
 - **Secure Authentication**: JWT-based login with BCrypt password hashing and Admin/User role authorization.
