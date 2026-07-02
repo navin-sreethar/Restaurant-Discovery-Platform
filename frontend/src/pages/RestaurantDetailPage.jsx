@@ -226,8 +226,8 @@ function InfoRow({ label, value, link }) {
     <div style={{ minWidth: 0 }}>
       <div className="form-label">{label}</div>
       {link
-        ? <a href={value.startsWith('http') ? value : `https://${value}`} target="_blank" rel="noreferrer" style={{ color: 'var(--primary-light)', fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block' }}>{value}</a>
-        : <p style={{ color: 'var(--text-primary)', fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{value}</p>
+        ? <a href={value.startsWith('http') ? value : `https://${value}`} target="_blank" rel="noreferrer" style={{ color: 'var(--primary-light)', fontSize: 14, display: 'block' }}>{value}</a>
+        : <p style={{ color: 'var(--text-primary)', fontSize: 14 }}>{value}</p>
       }
     </div>
   )
