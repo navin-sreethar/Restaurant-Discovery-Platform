@@ -4,7 +4,6 @@ A full-stack, AI-powered restaurant discovery and lead management platform.
 
 ## 🚀 Features
 - **Secure Authentication & Approval Workflow**: JWT-based login with BCrypt password hashing. New user registrations require approval via the Admin Dashboard before granting access.
-- **Support Ticket Helpdesk**: Full built-in support portal. Users can submit and track tickets; Admins can view and manage ticket statuses via a unified interface.
 - **Restaurant Management**: Full CRUD capabilities for restaurant data with distinct fields and lead status tracking.
 - **Advanced Search**: Filter restaurants by name, city, minimum rating, and lead status, with built-in pagination.
 - **Interactive Map Integration**: Integrated react-leaflet to plot restaurants on a world map using geocoded coordinates.
