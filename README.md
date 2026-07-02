@@ -75,27 +75,44 @@ erDiagram
     restaurants {
         int id PK
         string name
+        string address
         string city
+        string state
+        string country
+        string phone
+        string email
+        string website
         string cuisine
         float rating
+        string opening_hours
+        string notes
         enum lead_status
         int created_by FK
+    }
+
+    restaurant_reviews {
+        int id PK
+        int restaurant_id FK
+        text review_text
+        float rating
+        enum sentiment
     }
 
     ai_summaries {
         int id PK
         int restaurant_id FK
         string summary_type
-        text generated_text
-        datetime generated_at
+        text prompt_used
+        text result
     }
 
     audit_logs {
         int id PK
         int user_id FK
         string action
-        string target_table
-        int target_id
+        string resource
+        int resource_id
+        string ip_address
     }
 
     support_tickets {
@@ -109,6 +126,7 @@ erDiagram
 
     users ||--o{ restaurants : creates
     restaurants ||--o{ ai_summaries : has
+    restaurants ||--o{ restaurant_reviews : has
     users ||--o{ audit_logs : performs
     users ||--o{ support_tickets : submits
 ```
