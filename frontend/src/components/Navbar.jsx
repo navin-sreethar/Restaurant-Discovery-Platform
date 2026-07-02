@@ -20,6 +20,14 @@ export default function Navbar() {
       <div className="navbar-actions">
         {user && (
           <div className="nav-user">
+            <Link to="/helpdesk" style={{ marginRight: 16, fontSize: 14, fontWeight: 500, color: 'var(--text-secondary)', textDecoration: 'none' }}>
+              🎧 Support
+            </Link>
+            {user.role === 'ADMIN' && (
+              <Link to="/admin" style={{ marginRight: 12, fontSize: 14, fontWeight: 500, color: 'var(--primary-light)', textDecoration: 'none' }}>
+                🛡️ Admin Dashboard
+              </Link>
+            )}
             <span>{user.email}</span>
             <span className={`role-badge ${user.role?.toLowerCase()}`}>{user.role}</span>
           </div>

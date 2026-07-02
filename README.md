@@ -3,12 +3,13 @@
 A full-stack, AI-powered restaurant discovery and lead management platform built for the Day 5 Technical Assessment.
 
 ## 🚀 Features
-- **Secure Authentication**: JWT-based login with BCrypt password hashing and Admin/User role authorization.
-- **Restaurant Management**: Full CRUD capabilities for restaurant data with 12 distinct fields and lead status tracking.
-- **Advanced Search**: Filter restaurants by name, city, cuisine, minimum rating, and lead status, with built-in pagination.
-- **AI Integrations**: Powered by **Google Gemini 2.5 Flash**. Generates summaries, customer sentiment, marketing copy, and outreach emails. Includes a robust "Prompt Registry" and database caching to prevent redundant API calls.
+- **Secure Authentication & Approval Workflow**: JWT-based login with BCrypt password hashing. New user registrations require approval via the Admin Dashboard before granting access.
+- **Support Ticket Helpdesk**: Full built-in support portal. Users can submit and track tickets; Admins can view and manage ticket statuses via a unified interface.
+- **Restaurant Management**: Full CRUD capabilities for restaurant data with distinct fields and lead status tracking.
+- **Advanced Search**: Filter restaurants by name, city, minimum rating, and lead status, with built-in pagination.
+- **AI Integrations with Guardrails**: Powered by **Google Gemini 2.5 Flash**. Generates summaries, customer sentiment, marketing copy, and outreach emails. Includes a custom user prompt feature protected by strict guardrails (keyword blocklists, length validation, and system prompt restrictions).
 - **Audit Logging**: All write operations (Create, Update, Delete) are tracked to the user who performed them.
-- **Premium UI**: Modern SPA built with React and Vite, featuring a custom "Nebula" glassmorphism design system.
+- **Premium UI**: Modern SPA built with React and Vite, featuring a custom "Nebula" glassmorphism design system and global toast notifications.
 
 ---
 
@@ -95,9 +96,19 @@ erDiagram
         int target_id
     }
 
+    support_tickets {
+        int id PK
+        int user_id FK
+        string title
+        text description
+        enum status
+        enum priority
+    }
+
     users ||--o{ restaurants : creates
     restaurants ||--o{ ai_summaries : has
     users ||--o{ audit_logs : performs
+    users ||--o{ support_tickets : submits
 ```
 
 ---

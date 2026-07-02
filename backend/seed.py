@@ -19,11 +19,24 @@ def seed():
     admin = db.query(User).filter(User.email == "admin@restaurant.com").first()
     if not admin:
         hashed = bcrypt.hashpw("Admin1234".encode(), bcrypt.gensalt()).decode()
-        admin = User(email="admin@restaurant.com", username="Admin", password_hash=hashed, role="ADMIN")
+        admin = User(
+            email="admin@restaurant.com",
+            username="Admin",
+            password_hash=hashed,
+            role="ADMIN",
+            is_approved=True,
+            is_active=True
+        )
         db.add(admin)
         db.commit()
         db.refresh(admin)
         print("Admin user created")
+    else:
+        # Ensure existing admin is approved
+        admin.is_approved = True
+        admin.is_active = True
+        db.commit()
+
 
     # Real-world famous restaurants dataset
     real_restaurants = [

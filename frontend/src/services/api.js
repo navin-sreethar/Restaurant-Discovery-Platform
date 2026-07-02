@@ -55,7 +55,24 @@ export const deleteRestaurant = (id) =>
 export const generateAI = (restaurantId, type) =>
   api.post(`/restaurants/${restaurantId}/ai/${type}`)
 
+export const customAIPrompt = (restaurantId, prompt) =>
+  api.post(`/restaurants/${restaurantId}/ai/custom`, { prompt })
+
 export const getAILogs = (restaurantId) =>
   api.get(`/restaurants/${restaurantId}/ai/logs`)
+
+// ── User Management (Admin) ──
+export const getPendingUsers = () => api.get('/auth/users/pending')
+export const getAllUsers = () => api.get('/auth/users/all')
+export const approveUser = (userId, isApproved) =>
+  api.patch(`/auth/users/${userId}/approve`, { is_approved: isApproved })
+export const deleteUser = (userId) => api.delete(`/auth/users/${userId}`)
+
+// ── Helpdesk ──
+export const createTicket = (data) => api.post('/helpdesk/tickets', data)
+export const getMyTickets = () => api.get('/helpdesk/tickets/me')
+export const getAllTickets = () => api.get('/helpdesk/tickets') // Admin only
+export const updateTicketStatus = (ticketId, status) => 
+  api.patch(`/helpdesk/tickets/${ticketId}/status`, { status }) // Admin only
 
 export default api

@@ -1,6 +1,6 @@
 from sqlalchemy import (
     Column, Integer, String, Text, Enum, DECIMAL,
-    TIMESTAMP, ForeignKey, func
+    TIMESTAMP, ForeignKey, func, Boolean
 )
 from sqlalchemy.orm import relationship
 from database import Base
@@ -14,6 +14,18 @@ import enum
 class UserRole(str, enum.Enum):
     ADMIN = "ADMIN"
     USER = "USER"
+
+class TicketStatus(str, enum.Enum):
+    OPEN = "OPEN"
+    IN_PROGRESS = "IN_PROGRESS"
+    RESOLVED = "RESOLVED"
+    CLOSED = "CLOSED"
+
+class TicketPriority(str, enum.Enum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    URGENT = "URGENT"
 
 
 class LeadStatus(str, enum.Enum):
@@ -42,6 +54,9 @@ class User(Base):
     username = Column(String(100), nullable=False)
     password_hash = Column(String(255), nullable=False)
     role = Column(Enum(UserRole), nullable=False, default=UserRole.USER)
+    # Approval system: new users must be approved by admin before logging in
+    is_approved = Column(Boolean, nullable=False, default=False)
+    is_active = Column(Boolean, nullable=False, default=True)
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
 
@@ -49,6 +64,8 @@ class User(Base):
     restaurants = relationship("Restaurant", back_populates="creator")
     # One user can have many audit log entries
     audit_logs = relationship("AuditLog", back_populates="user")
+    # One user can have many support tickets
+    tickets = relationship("SupportTicket", back_populates="user")
 
 
 # ─────────────────────────────────────────
@@ -132,3 +149,22 @@ class AuditLog(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())
 
     user = relationship("User", back_populates="audit_logs")
+
+
+# ─────────────────────────────────────────
+# HELPDESK TICKET MODEL
+# ─────────────────────────────────────────
+
+class SupportTicket(Base):
+    __tablename__ = "support_tickets"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=False)
+    status = Column(Enum(TicketStatus), nullable=False, default=TicketStatus.OPEN)
+    priority = Column(Enum(TicketPriority), nullable=False, default=TicketPriority.MEDIUM)
+    created_at = Column(TIMESTAMP, server_default=func.now())
+    updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+
+    user = relationship("User", back_populates="tickets")

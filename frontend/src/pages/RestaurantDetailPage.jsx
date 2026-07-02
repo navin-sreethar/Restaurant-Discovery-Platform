@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { getRestaurant, deleteRestaurant, generateAI } from '../services/api'
+import { getRestaurant, deleteRestaurant, generateAI, customAIPrompt } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
+import toast from 'react-hot-toast'
 
 const AI_TYPES = [
   { key: 'summary', label: '📄 Summary', desc: 'General overview' },
@@ -18,8 +19,16 @@ export default function RestaurantDetailPage() {
 
   const [restaurant, setRestaurant] = useState(null)
   const [loading, setLoading] = useState(true)
+  
+  // Standard AI State
   const [aiResults, setAiResults] = useState({})
   const [aiLoading, setAiLoading] = useState('')
+  
+  // Custom AI State
+  const [customPrompt, setCustomPrompt] = useState('')
+  const [customResult, setCustomResult] = useState(null)
+  const [customLoading, setCustomLoading] = useState(false)
+  
   const [deleteConfirm, setDeleteConfirm] = useState(false)
 
   useEffect(() => {
@@ -34,19 +43,40 @@ export default function RestaurantDetailPage() {
     try {
       const res = await generateAI(id, type)
       setAiResults(prev => ({ ...prev, [type]: { result: res.data.result, cached: res.data.cached } }))
+      toast.success(`${AI_TYPES.find(t => t.key === type).label.split(' ')[1]} generated!`)
     } catch (err) {
-      setAiResults(prev => ({ ...prev, [type]: { result: 'Error: ' + (err.response?.data?.detail || 'AI request failed'), cached: false } }))
+      const detail = err.response?.data?.detail || 'AI request failed'
+      toast.error(detail)
+      setAiResults(prev => ({ ...prev, [type]: { result: `Error: ${detail}`, cached: false } }))
     } finally {
       setAiLoading('')
+    }
+  }
+
+  const handleCustomPrompt = async (e) => {
+    e.preventDefault()
+    if (customPrompt.length < 10) return toast.error('Prompt must be at least 10 characters')
+    
+    setCustomLoading(true)
+    try {
+      const res = await customAIPrompt(id, customPrompt)
+      setCustomResult({ prompt: customPrompt, result: res.data.result })
+      setCustomPrompt('')
+      toast.success('Custom answer generated!')
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Failed to generate custom answer')
+    } finally {
+      setCustomLoading(false)
     }
   }
 
   const handleDelete = async () => {
     try {
       await deleteRestaurant(id)
+      toast.success('Restaurant deleted successfully')
       navigate('/')
     } catch (err) {
-      alert('Failed to delete restaurant')
+      toast.error('Failed to delete restaurant')
     }
   }
 
@@ -70,11 +100,12 @@ export default function RestaurantDetailPage() {
         <Link to="/" className="btn btn-secondary btn-sm" style={{ marginBottom: 24 }}>← Back to Restaurants</Link>
 
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
-          <div>
-            <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 6 }}>{restaurant.name}</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24, gap: 16 }}>
+          <div style={{ minWidth: 0 }}>
+            <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {restaurant.name}
+            </h1>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-              <span style={{ color: 'var(--primary-light)', fontWeight: 500 }}>{restaurant.cuisine}</span>
               <span className="rating-stars">★ {restaurant.rating}</span>
               <span className={`lead-badge ${restaurant.lead_status}`}>{restaurant.lead_status}</span>
             </div>
@@ -94,7 +125,6 @@ export default function RestaurantDetailPage() {
             {restaurant.phone && <InfoRow label="Phone" value={restaurant.phone} />}
             {restaurant.email && <InfoRow label="Email" value={restaurant.email} />}
             {restaurant.website && <InfoRow label="Website" value={restaurant.website} link />}
-            {restaurant.opening_hours && <InfoRow label="Hours" value={restaurant.opening_hours} />}
           </div>
           {restaurant.notes && (
             <>
@@ -142,6 +172,31 @@ export default function RestaurantDetailPage() {
               <div className="ai-result">{data.result}</div>
             </div>
           ))}
+
+          {/* Custom Prompt Form */}
+          <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
+            <h4 style={{ marginBottom: 12 }}>Ask a Custom Question</h4>
+            <form onSubmit={handleCustomPrompt} style={{ display: 'flex', gap: 12 }}>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="e.g., What are the best marketing channels for this specific location?"
+                value={customPrompt}
+                onChange={e => setCustomPrompt(e.target.value)}
+                style={{ flex: 1 }}
+              />
+              <button type="submit" className="btn btn-primary" disabled={customLoading}>
+                {customLoading ? <span className="spinner"></span> : 'Ask AI'}
+              </button>
+            </form>
+            
+            {customResult && (
+              <div style={{ marginTop: 16 }}>
+                <div className="form-label" style={{ marginBottom: 8 }}>Q: {customResult.prompt}</div>
+                <div className="ai-result">{customResult.result}</div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Delete Confirmation */}
@@ -166,11 +221,11 @@ export default function RestaurantDetailPage() {
 
 function InfoRow({ label, value, link }) {
   return (
-    <div>
+    <div style={{ minWidth: 0 }}>
       <div className="form-label">{label}</div>
       {link
-        ? <a href={value.startsWith('http') ? value : `https://${value}`} target="_blank" rel="noreferrer" style={{ color: 'var(--primary-light)', fontSize: 14 }}>{value}</a>
-        : <p style={{ color: 'var(--text-primary)', fontSize: 14 }}>{value}</p>
+        ? <a href={value.startsWith('http') ? value : `https://${value}`} target="_blank" rel="noreferrer" style={{ color: 'var(--primary-light)', fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block' }}>{value}</a>
+        : <p style={{ color: 'var(--text-primary)', fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{value}</p>
       }
     </div>
   )

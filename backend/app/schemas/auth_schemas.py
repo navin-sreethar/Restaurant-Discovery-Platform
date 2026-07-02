@@ -29,6 +29,8 @@ class UserResponse(BaseModel):
     email: str
     username: str
     role: str
+    is_approved: bool
+    is_active: bool
 
     class Config:
         from_attributes = True   # allows converting SQLAlchemy model → this schema

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { getRestaurant, createRestaurant, updateRestaurant } from '../services/api'
 import Navbar from '../components/Navbar'
+import toast from 'react-hot-toast'
 
 const LEAD_STATUSES = ['COLD', 'CONTACTED', 'INTERESTED', 'NOT_INTERESTED', 'CONVERTED']
 
@@ -9,6 +10,14 @@ const EMPTY_FORM = {
   name: '', address: '', city: '', state: '', country: 'USA',
   phone: '', email: '', website: '', cuisine: '',
   rating: '3.0', opening_hours: '', notes: '', lead_status: 'COLD'
+}
+
+// Format phone number to (XXX) XXX-XXXX
+function formatPhone(value) {
+  const digits = value.replace(/\D/g, '').slice(0, 10)
+  if (digits.length <= 3) return digits
+  if (digits.length <= 6) return `(${digits.slice(0,3)}) ${digits.slice(3)}`
+  return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`
 }
 
 export default function RestaurantFormPage() {
@@ -38,24 +47,36 @@ export default function RestaurantFormPage() {
     }
   }, [id, isEdit])
 
-  const handleChange = (field) => (e) => setForm(prev => ({ ...prev, [field]: e.target.value }))
+  const handleChange = (field) => (e) => {
+    let value = e.target.value
+    if (field === 'phone') value = formatPhone(value)
+    setForm(prev => ({ ...prev, [field]: value }))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSaving(true)
-    setError('')
+    
+    // Client side email validation
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setSaving(false)
+      return toast.error('Please enter a valid email address')
+    }
+
     try {
       const payload = { ...form, rating: parseFloat(form.rating) }
       if (isEdit) {
         await updateRestaurant(id, payload)
+        toast.success('Restaurant updated successfully')
         navigate(`/restaurants/${id}`)
       } else {
         const res = await createRestaurant(payload)
+        toast.success('Restaurant created successfully')
         navigate(`/restaurants/${res.data.id}`)
       }
     } catch (err) {
       const detail = err.response?.data?.detail
-      setError(typeof detail === 'string' ? detail : 'Failed to save. Check all required fields.')
+      toast.error(typeof detail === 'string' ? detail : 'Failed to save. Check all required fields.')
     } finally {
       setSaving(false)
     }
@@ -80,8 +101,6 @@ export default function RestaurantFormPage() {
           <h1>{isEdit ? 'Edit Restaurant' : 'Add Restaurant'}</h1>
           <p>{isEdit ? 'Update restaurant details below' : 'Fill in the details to add a new restaurant'}</p>
         </div>
-
-        {error && <div className="auth-error">⚠️ {error}</div>}
 
         <form onSubmit={handleSubmit} className="card">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 24px' }}>
