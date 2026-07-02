@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestaurantIQ - Technical Documentation</title>
+    <!-- Mermaid.js for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-light: #ef5350;
+            --bg-color: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --border: #e0e0e0;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: white;
+            border-bottom: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+        }
+        header h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-top: 2.5rem;
+        }
+        h3 {
+            color: var(--text-primary);
+        }
+        pre, code {
+            background-color: var(--bg-secondary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+        .mermaid {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: flex;
+            justify-content: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+        th {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>RestaurantIQ</h1>
+        <p>Technical Documentation & Project Specifications</p>
+    </header>
+
+    <div class="container">
+        <h2>1. Setup Instructions</h2>
+        <p>The entire application is containerized using Docker for a seamless setup experience. To run the application:</p>
+        <pre><code># 1. Clone the repository
+git clone &lt;repo-url&gt;
+cd Restaurant-Discovery-Platform
+
+# 2. Build and start all services
+docker-compose up -d --build
+
+# 3. View the application
+# Frontend: http://localhost:5173
+# Backend API: http://localhost:8000</code></pre>
+
+        <h2>2. Architecture Diagram</h2>
+        <p>The platform follows a modern microservices architecture using React, FastAPI, and MySQL.</p>
+        <div class="mermaid">
+        graph TD
+            User([Admin / Standard User])
+            UI[React SPA<br/>Vite / Context API]
+            API[FastAPI Backend<br/>Uvicorn]
+            Auth[Auth Service<br/>JWT/BCrypt]
+            AISvc[AI Integration<br/>Gemini 2.5]
+            DB[(MySQL 8.0)]
+            
+            User -->|Browser| UI
+            UI -->|REST API Calls| API
+            API -->|Validates| Auth
+            API -->|Generates Content| AISvc
+            API -->|SQLAlchemy ORM| DB
+        </div>
+
+        <h2>3. Database Schema ERD</h2>
+        <p>The system uses a highly normalized relational database. Below is the Entity-Relationship Diagram (ERD):</p>
+        <div class="mermaid">
+        erDiagram
+            USER ||--o{ RESTAURANT : creates
+            USER ||--o{ AUDIT_LOG : "performs actions"
+            RESTAURANT ||--o{ AI_SUMMARY : "has"
+
+            USER {
+                int id PK
+                string email "Unique"
+                string username
+                string password_hash
+                string role "ADMIN or USER"
+                boolean is_approved "Default: false"
+                boolean is_active "Default: true"
+            }
+            
+            RESTAURANT {
+                int id PK
+                string name "Indexed"
+                string address
+                string city "Indexed"
+                string state
+                string country
+                string phone
+                string email
+                string website
+                string cuisine "Indexed"
+                string opening_hours
+                float rating "Default: 0.0"
+                string notes
+                string lead_status "Enum: COLD, CONTACTED..."
+                int created_by FK "User ID"
+            }
+
+            AI_SUMMARY {
+                int id PK
+                int restaurant_id FK
+                string summary_type "summary, sentiment, etc."
+                text prompt_used
+                text result
+                datetime created_at
+            }
+
+            AUDIT_LOG {
+                int id PK
+                int user_id FK
+                string action "CREATE, UPDATE, DELETE"
+                string resource "restaurant"
+                int resource_id
+                datetime timestamp
+            }
+        </div>
+
+        <h2>4. API Documentation (Swagger)</h2>
+        <p>Because the backend is built with <strong>FastAPI</strong>, comprehensive OpenAPI documentation is generated automatically. The platform does not require external Postman collections as it features an interactive Swagger UI directly in the browser.</p>
+        <ul>
+            <li><strong>Swagger UI (Interactive API Explorer):</strong> <a href="http://localhost:8000/docs" target="_blank">http://localhost:8000/docs</a></li>
+            <li><strong>ReDoc (Alternative format):</strong> <a href="http://localhost:8000/redoc" target="_blank">http://localhost:8000/redoc</a></li>
+            <li><strong>Raw OpenAPI JSON:</strong> <a href="http://localhost:8000/openapi.json" target="_blank">http://localhost:8000/openapi.json</a></li>
+        </ul>
+        <p><i>Note: The backend Docker container must be running to view the live documentation.</i></p>
+
+        <h2>5. Assumptions Made</h2>
+        <ul>
+            <li><strong>Authentication Flow:</strong> We assume a private, invite-only B2B system where new registrations default to <code>is_approved = False</code>. Users cannot interact with the platform until an Administrator explicitly approves their account in the dashboard.</li>
+            <li><strong>AI Guardrails:</strong> It is assumed that API keys for Google Gemini will be injected via <code>.env</code> at runtime. The system expects standard inputs, and uses comprehensive `try/except` blocks to gracefully handle potential Gemini API safety filters or timeouts without crashing.</li>
+            <li><strong>Data Scalability:</strong> It is assumed that the database could scale significantly in an enterprise environment. As such, explicit database indexing is applied to common filter fields (<code>city</code>, <code>cuisine</code>, <code>name</code>) and server-side pagination (12 items per page) is strictly enforced on the main feed to reduce memory overhead.</li>
+            <li><strong>Deployment Strategy:</strong> We assume a containerized production environment. The use of <code>docker-compose</code> ensures identical execution across development, staging, and production environments, eliminating "it works on my machine" issues.</li>
+            <li><strong>Logging:</strong> Python's built-in <code>logging</code> module writes to standard output, which is the assumption for Dockerized applications where log streams are aggregated and monitored by the container orchestrator.</li>
+        </ul>
+    </div>
+</body>
+</html>
