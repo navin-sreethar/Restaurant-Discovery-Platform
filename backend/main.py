@@ -1,6 +1,18 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import auth, restaurants, ai, helpdesk
+import logging
+
+# ─────────────────────────────────────────
+# CONFIGURE PYTHON LOGGING MODULE
+# ─────────────────────────────────────────
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+logger = logging.getLogger("restaurant_api")
+logger.info("Starting Restaurant Discovery Platform API...")
 
 # ─────────────────────────────────────────
 # CREATE THE FASTAPI APP
