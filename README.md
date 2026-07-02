@@ -168,9 +168,9 @@ This single command will:
 - **Frontend UI:** `http://localhost`
 - **Backend Swagger API Docs:** `http://localhost:8000/docs`
 
-**Demo Login:**
-- Email: `admin@restaurant.com`
-- Password: `Admin1234`
+**Demo Logins:**
+- **Admin Access:** `admin@restaurant.com` / `Admin1234`
+- **Standard User:** `user@restaurant.com` / `User1234`
 
 ---
 
