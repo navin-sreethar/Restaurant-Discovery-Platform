@@ -344,11 +344,12 @@ body::after {
 }
 
 .rating-stars {
-  color: var(--warning);
+  color: #b45309; /* Darker amber for better contrast */
   font-weight: 700;
-  background: rgba(245, 158, 11, 0.1);
+  background: rgba(245, 158, 11, 0.15);
   padding: 4px 10px;
   border-radius: 6px;
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 /* =========================================
@@ -364,11 +365,11 @@ body::after {
   letter-spacing: 1px;
 }
 
-.lead-badge.COLD           { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
-.lead-badge.CONTACTED      { background: rgba(139, 92, 246, 0.15); color: var(--primary-light); border: 1px solid rgba(139, 92, 246, 0.3); }
-.lead-badge.INTERESTED     { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
-.lead-badge.NOT_INTERESTED { background: rgba(244, 63, 94, 0.15); color: var(--danger); border: 1px solid rgba(244, 63, 94, 0.3); }
-.lead-badge.CONVERTED      { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); box-shadow: 0 0 10px var(--success-glow); }
+.lead-badge.COLD           { background: rgba(148, 163, 184, 0.15); color: #475569; border: 1px solid rgba(148, 163, 184, 0.4); }
+.lead-badge.CONTACTED      { background: rgba(139, 92, 246, 0.15); color: #6d28d9; border: 1px solid rgba(139, 92, 246, 0.4); }
+.lead-badge.INTERESTED     { background: rgba(245, 158, 11, 0.15); color: #b45309; border: 1px solid rgba(245, 158, 11, 0.4); box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
+.lead-badge.NOT_INTERESTED { background: rgba(244, 63, 94, 0.15); color: #be123c; border: 1px solid rgba(244, 63, 94, 0.4); }
+.lead-badge.CONVERTED      { background: rgba(16, 185, 129, 0.15); color: #047857; border: 1px solid rgba(16, 185, 129, 0.4); box-shadow: 0 0 10px var(--success-glow); }
 
 /* =========================================
    SEARCH BAR
