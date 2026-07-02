@@ -37,6 +37,22 @@ def seed():
         admin.is_active = True
         db.commit()
 
+    # Create standard user if doesn't exist
+    standard_user = db.query(User).filter(User.email == "user@restaurant.com").first()
+    if not standard_user:
+        hashed = bcrypt.hashpw("User1234".encode(), bcrypt.gensalt()).decode()
+        standard_user = User(
+            email="user@restaurant.com",
+            username="User",
+            password_hash=hashed,
+            role="USER",
+            is_approved=True,
+            is_active=True
+        )
+        db.add(standard_user)
+        db.commit()
+        print("Standard user created")
+
 
     real_restaurants = [
         {"name": "Le Bernardin", "address": "155 W 51st St", "city": "New York", "state": "NY", "country": "USA", "phone": "212-554-1515", "email": "info@le-bernardin.com", "cuisine": "French / Seafood", "rating": 4.9, "lead_status": "COLD", "website": "le-bernardin.com", "opening_hours": "Mon-Fri 12:00 PM - 10:30 PM, Sat 5:15 PM - 10:30 PM", "notes": "3 Michelin stars. Consistently ranked among the best in the world. High-profile chef Eric Ripert.", "lat": 40.7614, "lng": -73.9816},
