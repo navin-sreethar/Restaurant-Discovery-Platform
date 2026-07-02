@@ -140,6 +140,7 @@ export default function RestaurantsPage() {
                   <span className="rating-stars">★ {r.rating}</span>
                   <span>📍 {r.city}, {r.state}</span>
                   {r.phone && <span>📞 {r.phone}</span>}
+                  {r.email && <span>✉️ {r.email}</span>}
                   {r.opening_hours && <span>🕒 {r.opening_hours.split(',')[0]}</span>}
                 </div>
                 {r.notes && (
