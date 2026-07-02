@@ -1,0 +1,18 @@
+meta {
+  name: Admin Login
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8000/api/v1/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "admin@restaurant.com",
+    "password": "Admin1234"
+  }
+}
