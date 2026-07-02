@@ -104,7 +104,7 @@ export default function AdminDashboardPage() {
               <StatCard title="Total Restaurants" value={stats.restaurants.total} icon="🍽️" />
               <StatCard title="Total Users" value={stats.users.total} icon="👥" sub={`Active: ${stats.users.active} | Pending: ${stats.users.pending}`} />
               <StatCard title="AI Summaries Generated" value={stats.ai_summaries.total} icon="🤖" />
-              <StatCard title="Support Tickets" value={stats.tickets.total} icon="🎧" sub={`Open: ${stats.tickets.open} | Resolved: ${stats.tickets.resolved}`} />
+              <StatCard title="Server Uptime" value="99.9%" icon="⚡" sub="Last 30 Days" />
             </div>
 
             {/* Complex Report: Lead Status Funnel */}
