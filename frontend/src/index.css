@@ -590,3 +590,29 @@ body::after {
 .flex-center { display: flex; align-items: center; justify-content: center; }
 .text-muted { color: var(--text-muted); }
 .divider { border: none; border-top: 1px solid var(--glass-border); margin: 32px 0; }
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+   ========================================= */
+@media (max-width: 768px) {
+  .page-wrapper { padding: 0 16px; }
+  .page-header h1 { font-size: 28px; }
+  .navbar { padding: 0 16px; }
+  .navbar-brand span { font-size: 18px; }
+  .restaurants-grid { grid-template-columns: 1fr; }
+  .search-bar { flex-direction: column; padding: 16px; gap: 12px; }
+  .form-input, .form-select { width: 100%; }
+  .auth-card { padding: 32px 20px; }
+  .card { padding: 20px; }
+  
+  /* Fix any hardcoded inline 2-column grids (like quick actions) */
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .navbar-actions { gap: 8px; }
+  .nav-user span:not(.role-badge) { display: none; } /* Hide user email on small screens */
+  
+  .btn { width: 100%; justify-content: center; }
+  .btn-sm { width: auto; }
+}
