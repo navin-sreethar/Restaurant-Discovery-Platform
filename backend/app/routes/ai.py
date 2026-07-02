@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
+from app.middleware.limiter import limiter
 from database import get_db
 from app.models import Restaurant, AISummary, User
 from app.middleware.dependencies import get_current_user
@@ -43,7 +44,9 @@ class CustomPromptResponse(BaseModel):
     prompt_used: str
 
 @router.post("/{restaurant_id}/ai/custom", response_model=CustomPromptResponse)
+@limiter.limit("5/minute")
 def custom_ai_prompt(
+    request: Request,
     restaurant_id: int,
     body: CustomPromptRequest,
     db: Session = Depends(get_db),
@@ -113,7 +116,9 @@ def custom_ai_prompt(
 # ─────────────────────────────────────────
 
 @router.post("/{restaurant_id}/ai/{summary_type}", response_model=AIResponse)
+@limiter.limit("5/minute")
 def generate_ai_summary(
+    request: Request,
     restaurant_id: int,
     summary_type: str,
     db: Session = Depends(get_db),

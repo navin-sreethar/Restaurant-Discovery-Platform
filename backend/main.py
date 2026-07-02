@@ -2,6 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import auth, restaurants, ai, helpdesk
 import logging
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from app.middleware.limiter import limiter
+
+
 
 # ─────────────────────────────────────────
 # CONFIGURE PYTHON LOGGING MODULE
@@ -25,6 +30,12 @@ app = FastAPI(
     docs_url="/docs",      # Swagger UI lives here — visit http://localhost:8000/docs
     redoc_url="/redoc"
 )
+
+# ─────────────────────────────────────────
+# ATTACH RATE LIMITER
+# ─────────────────────────────────────────
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # ─────────────────────────────────────────
 # CORS — allow the React frontend to call this API
