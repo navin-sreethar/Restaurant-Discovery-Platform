@@ -107,7 +107,9 @@ export default function RestaurantDetailPage() {
             </h1>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
               <span className="rating-stars">★ {restaurant.rating}</span>
-              <span className={`lead-badge ${restaurant.lead_status}`}>{restaurant.lead_status}</span>
+              {user?.role === 'ADMIN' && (
+                <span className={`lead-badge ${restaurant.lead_status}`}>{restaurant.lead_status}</span>
+              )}
             </div>
           </div>
           {user?.role === 'ADMIN' && (

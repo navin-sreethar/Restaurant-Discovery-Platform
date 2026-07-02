@@ -61,6 +61,8 @@ class RestaurantResponse(BaseModel):
     rating: Decimal
     opening_hours: Optional[str]
     notes: Optional[str]
+    lat: Optional[Decimal]
+    lng: Optional[Decimal]
     lead_status: str
     created_by: int
     created_at: datetime

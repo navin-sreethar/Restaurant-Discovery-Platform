@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getRestaurants } from '../services/api'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
+import MapComponent from '../components/MapComponent'
 
 const LEAD_STATUSES = ['COLD', 'CONTACTED', 'INTERESTED', 'NOT_INTERESTED', 'CONVERTED']
 
@@ -11,6 +12,7 @@ export default function RestaurantsPage() {
   const [total, setTotal] = useState(0)
   const [pages, setPages] = useState(1)
   const [loading, setLoading] = useState(true)
+  const [viewMode, setViewMode] = useState('grid') // 'grid' or 'map'
 
   // Search/filter state
   const [search, setSearch] = useState('')
@@ -92,15 +94,17 @@ export default function RestaurantsPage() {
             onChange={e => setCuisine(e.target.value)}
             style={{ maxWidth: '150px' }}
           />
-          <select
-            className="form-select"
-            value={leadStatus}
-            onChange={e => setLeadStatus(e.target.value)}
-            style={{ maxWidth: '160px' }}
-          >
-            <option value="">All Statuses</option>
-            {LEAD_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
+          {user?.role === 'ADMIN' && (
+            <select
+              className="form-select"
+              value={leadStatus}
+              onChange={e => setLeadStatus(e.target.value)}
+              style={{ maxWidth: '160px' }}
+            >
+              <option value="">All Statuses</option>
+              {LEAD_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          )}
           <input
             className="form-input"
             type="number"
@@ -112,6 +116,23 @@ export default function RestaurantsPage() {
           />
           <button type="submit" className="btn btn-primary btn-sm">Search</button>
           <button type="button" className="btn btn-secondary btn-sm" onClick={clearFilters}>Clear</button>
+          
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+            <button 
+              type="button" 
+              className={`btn btn-sm ${viewMode === 'grid' ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => setViewMode('grid')}
+            >
+              Grid View
+            </button>
+            <button 
+              type="button" 
+              className={`btn btn-sm ${viewMode === 'map' ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => setViewMode('map')}
+            >
+              Map View
+            </button>
+          </div>
         </form>
 
         {/* Restaurant Grid */}
@@ -125,6 +146,8 @@ export default function RestaurantsPage() {
             <h3>No restaurants found</h3>
             <p>Try adjusting your search filters</p>
           </div>
+        ) : viewMode === 'map' ? (
+          <MapComponent restaurants={restaurants} />
         ) : (
           <div className="restaurants-grid">
             {restaurants.map(r => (
@@ -134,7 +157,9 @@ export default function RestaurantsPage() {
                     <div className="restaurant-name">{r.name}</div>
                     <div className="restaurant-cuisine">{r.cuisine}</div>
                   </div>
-                  <span className={`lead-badge ${r.lead_status}`}>{r.lead_status}</span>
+                  {user?.role === 'ADMIN' && (
+                    <span className={`lead-badge ${r.lead_status}`}>{r.lead_status}</span>
+                  )}
                 </div>
                 <div className="restaurant-meta">
                   <span className="rating-stars">★ {r.rating}</span>

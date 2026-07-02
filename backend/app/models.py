@@ -88,6 +88,8 @@ class Restaurant(Base):
     rating = Column(DECIMAL(3, 2), nullable=False, default=0.00)
     opening_hours = Column(Text)
     notes = Column(Text)
+    lat = Column(DECIMAL(10, 8), nullable=True)
+    lng = Column(DECIMAL(11, 8), nullable=True)
     lead_status = Column(Enum(LeadStatus), nullable=False, default=LeadStatus.COLD)
     created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
