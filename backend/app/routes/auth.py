@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from database import get_db
-from app.models import User, UserRole
+from app.models import User, UserRole, Restaurant, AISummary, SupportTicket, TicketStatus, LeadStatus
 from app.schemas.auth_schemas import RegisterRequest, LoginRequest, TokenResponse, UserResponse
 from app.services.auth_service import hash_password, verify_password, create_access_token
 from app.middleware.dependencies import get_current_user
@@ -145,3 +145,59 @@ def delete_user(
     db.delete(user)
     db.commit()
     return {"message": "User deleted successfully"}
+
+
+@router.get("/admin/stats")
+def get_admin_stats(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get complex dashboard statistics. Admin only."""
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Admin access required")
+
+    total_users = db.query(User).filter(User.role == UserRole.USER).count()
+    pending_users = db.query(User).filter(User.role == UserRole.USER, User.is_approved == False).count()
+    active_users = total_users - pending_users
+
+    total_restaurants = db.query(Restaurant).count()
+    
+    # Lead breakdown
+    leads_cold = db.query(Restaurant).filter(Restaurant.lead_status == LeadStatus.COLD).count()
+    leads_contacted = db.query(Restaurant).filter(Restaurant.lead_status == LeadStatus.CONTACTED).count()
+    leads_interested = db.query(Restaurant).filter(Restaurant.lead_status == LeadStatus.INTERESTED).count()
+    leads_converted = db.query(Restaurant).filter(Restaurant.lead_status == LeadStatus.CONVERTED).count()
+    leads_not_interested = db.query(Restaurant).filter(Restaurant.lead_status == LeadStatus.NOT_INTERESTED).count()
+
+    total_ai_summaries = db.query(AISummary).count()
+
+    # Ticket breakdown
+    total_tickets = db.query(SupportTicket).count()
+    open_tickets = db.query(SupportTicket).filter(SupportTicket.status == TicketStatus.OPEN).count()
+    resolved_tickets = db.query(SupportTicket).filter(SupportTicket.status == TicketStatus.RESOLVED).count()
+
+    return {
+        "users": {
+            "total": total_users,
+            "pending": pending_users,
+            "active": active_users
+        },
+        "restaurants": {
+            "total": total_restaurants,
+            "leads": {
+                "cold": leads_cold,
+                "contacted": leads_contacted,
+                "interested": leads_interested,
+                "converted": leads_converted,
+                "not_interested": leads_not_interested
+            }
+        },
+        "ai_summaries": {
+            "total": total_ai_summaries
+        },
+        "tickets": {
+            "total": total_tickets,
+            "open": open_tickets,
+            "resolved": resolved_tickets
+        }
+    }

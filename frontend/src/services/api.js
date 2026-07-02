@@ -67,6 +67,7 @@ export const getAllUsers = () => api.get('/auth/users/all')
 export const approveUser = (userId, isApproved) =>
   api.patch(`/auth/users/${userId}/approve`, { is_approved: isApproved })
 export const deleteUser = (userId) => api.delete(`/auth/users/${userId}`)
+export const getAdminStats = () => api.get('/auth/admin/stats')
 
 // ── Helpdesk ──
 export const createTicket = (data) => api.post('/helpdesk/tickets', data)
