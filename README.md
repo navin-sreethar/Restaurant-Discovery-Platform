@@ -10,8 +10,8 @@ A full-stack, AI-powered restaurant discovery and lead management platform.
 - **AI Integrations with Guardrails**: Powered by **Google Gemini 2.5 Flash**. Generates summaries, customer sentiment, marketing copy, and outreach emails. Includes a custom user prompt feature protected by strict guardrails (keyword blocklists, length validation, and system prompt restrictions).
 - **Audit Logging**: All write operations (Create, Update, Delete) are tracked to the user who performed them.
 - **Rate Limiting**: Integrated SlowAPI to protect the AI generation endpoints from spam (5 req/min).
-- **API Testing Collection**: Included a `bruno_collection` directory for version-controlled, reproducible API testing as a modern alternative to Postman.
-- **Premium UI**: Modern SPA built with React and Vite, featuring a custom "Nebula" glassmorphism design system and global toast notifications.
+- **API Testing**: Included a `bruno_collection` folder so API tests are saved directly in the code repository instead of using Postman.
+- **Custom UI Design**: Built the frontend from scratch using React, focusing on a clean, modern look with semi-transparent backgrounds and smooth popup notifications.
 
 ---
 
@@ -160,7 +160,6 @@ We went above and beyond the core requirements by implementing:
 - **Audit logging:** Tracks every create, update, and delete action in a dedicated MySQL `audit_logs` table.
 - **Rate limiting:** API endpoints are protected with `slowapi` to prevent abuse.
 - **Sample data:** Provided both a Python seed script (`seed.py`) and a raw database dump (`sample_data.sql`).
-- **Cloud deployment ready:** Architecture relies on relative routing and an Nginx reverse proxy, ensuring seamless deployment to any cloud VM without configuration changes.
 
 ---
 
