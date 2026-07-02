@@ -7,6 +7,7 @@ A full-stack, AI-powered restaurant discovery and lead management platform.
 - **Support Ticket Helpdesk**: Full built-in support portal. Users can submit and track tickets; Admins can view and manage ticket statuses via a unified interface.
 - **Restaurant Management**: Full CRUD capabilities for restaurant data with distinct fields and lead status tracking.
 - **Advanced Search**: Filter restaurants by name, city, minimum rating, and lead status, with built-in pagination.
+- **Interactive Map Integration**: Integrated react-leaflet to plot restaurants on a world map using geocoded coordinates.
 - **AI Integrations with Guardrails**: Powered by **Google Gemini 2.5 Flash**. Generates summaries, customer sentiment, marketing copy, and outreach emails. Includes a custom user prompt feature protected by strict guardrails (keyword blocklists, length validation, and system prompt restrictions).
 - **Audit Logging**: All write operations (Create, Update, Delete) are tracked to the user who performed them.
 - **Rate Limiting**: Integrated SlowAPI to protect the AI generation endpoints from spam (5 req/min).
@@ -86,6 +87,8 @@ erDiagram
         float rating
         string opening_hours
         string notes
+        float lat
+        float lng
         enum lead_status
         int created_by FK
     }
@@ -175,6 +178,7 @@ This single command will:
 ## 🌟 Bonus Features Achieved
 We went above and beyond the core requirements by implementing:
 - **Role-based authorization:** Standard users can only view records; Admins have full CRUD access.
+- **CRM Access Control:** Lead tracking statuses are strictly restricted to Admin users to keep the consumer-facing UI clean.
 - **Audit logging:** Tracks every create, update, and delete action in a dedicated MySQL `audit_logs` table.
 - **Rate limiting:** API endpoints are protected with `slowapi` to prevent abuse.
 - **Sample data:** Provided both a Python seed script (`seed.py`) and a raw database dump (`sample_data.sql`).
