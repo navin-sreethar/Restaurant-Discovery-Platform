@@ -121,9 +121,11 @@ export default function RestaurantDetailPage() {
         {/* Info Card */}
         <div className="card" style={{ marginBottom: 24 }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px 32px' }}>
+            {restaurant.cuisine && <InfoRow label="Cuisine" value={restaurant.cuisine} />}
             <InfoRow label="Address" value={`${restaurant.address}, ${restaurant.city}, ${restaurant.state}, ${restaurant.country}`} />
             {restaurant.phone && <InfoRow label="Phone" value={restaurant.phone} />}
             {restaurant.email && <InfoRow label="Email" value={restaurant.email} />}
+            {restaurant.opening_hours && <InfoRow label="Opening Hours" value={restaurant.opening_hours} />}
             {restaurant.website && <InfoRow label="Website" value={restaurant.website} link />}
           </div>
           {restaurant.notes && (
