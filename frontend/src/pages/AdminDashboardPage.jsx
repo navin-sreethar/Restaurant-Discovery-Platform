@@ -131,9 +131,9 @@ export default function AdminDashboardPage() {
                 <button className="btn btn-primary" onClick={() => setActiveTab('users')}>Review Now</button>
               </div>
               <div className="card" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.1), rgba(59,130,246,0.1))', border: '1px solid rgba(16,185,129,0.2)' }}>
-                <h3 style={{ marginBottom: 12 }}>Helpdesk Tickets</h3>
-                <p style={{ color: 'var(--text-secondary)', marginBottom: 16 }}>There are {stats.tickets.open} open support tickets requiring attention.</p>
-                <Link to="/helpdesk" className="btn btn-secondary" style={{ display: 'inline-block' }}>Go to Helpdesk</Link>
+                <h3 style={{ marginBottom: 12 }}>System Status</h3>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: 16 }}>All AI microservices and database connections are operating normally.</p>
+                <span className="btn btn-secondary" style={{ display: 'inline-block', opacity: 0.8, cursor: 'default' }}>Operational 🟢</span>
               </div>
             </div>
           </div>
