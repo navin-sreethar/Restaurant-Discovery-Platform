@@ -178,21 +178,8 @@ def custom_ai_prompt(
     - System prompt restricts Gemini to restaurant-related answers only
     """
     prompt = body.prompt.strip()
-
-    # Length validation
-    if len(prompt) < 10:
-        raise HTTPException(status_code=400, detail="Prompt must be at least 10 characters long.")
-    if len(prompt) > 500:
-        raise HTTPException(status_code=400, detail="Prompt must be under 500 characters.")
-
-    # Blocked keyword guardrail
-    prompt_lower = prompt.lower()
-    for keyword in BLOCKED_KEYWORDS:
-        if keyword in prompt_lower:
-            raise HTTPException(
-                status_code=400,
-                detail="Your prompt contains restricted content. Please keep questions relevant to the restaurant."
-            )
+    if not prompt:
+        raise HTTPException(status_code=400, detail="Prompt cannot be empty.")
 
     # Check restaurant exists
     restaurant = db.query(Restaurant).filter(Restaurant.id == restaurant_id).first()
@@ -225,7 +212,16 @@ def custom_ai_prompt(
     try:
         model = get_gemini_client()
         response = model.generate_content(full_prompt)
-        result_text = response.text.strip()
+        
+        # Check if the response was blocked by safety settings
+        if getattr(response, "prompt_feedback", None) and response.prompt_feedback.block_reason:
+            result_text = "I'm sorry, I cannot answer that due to content safety restrictions."
+        else:
+            try:
+                result_text = response.text.strip()
+            except ValueError:
+                result_text = "I'm sorry, I cannot generate a response to that question due to content safety filters."
+                
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"AI service error: {str(e)}")
 
