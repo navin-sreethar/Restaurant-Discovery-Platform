@@ -5,39 +5,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Vibrant Colors */
-  --primary: #8b5cf6;       /* Violet */
-  --primary-dark: #7c3aed;
-  --primary-light: #a78bfa;
-  --accent: #ec4899;        /* Pink */
-  --accent-light: #f472b6;
+  /* Vibrant Colors - Red Theme */
+  --primary: #ef4444;       /* Red */
+  --primary-dark: #dc2626;
+  --primary-light: #fca5a5;
+  --accent: #f87171;        /* Light Red */
+  --accent-light: #fecaca;
   
   --success: #10b981;
   --success-glow: rgba(16, 185, 129, 0.4);
-  --danger: #f43f5e;
+  --danger: #ef4444;
   --warning: #f59e0b;
   --info: #3b82f6;
 
-  /* Mesh Background Colors */
-  --bg-color-1: #0f172a;    /* Deep Slate */
-  --bg-color-2: #1e1b4b;    /* Deep Indigo */
+  /* Light Background Colors */
+  --bg-color-1: #ffffff;    /* White */
+  --bg-color-2: #f8fafc;    /* Very Light Slate */
   
-  /* Glassmorphism */
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-hover: rgba(255, 255, 255, 0.06);
+  /* Glassmorphism - Light Mode */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-hover: rgba(255, 255, 255, 1);
 
-  /* Typography */
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #64748b;
+  /* Typography - Dark text for light mode */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
 
   --radius-sm: 10px;
   --radius: 16px;
   --radius-lg: 24px;
 
   --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-glow: 0 0 30px rgba(139, 92, 246, 0.2);
+  --shadow-glow: 0 0 30px rgba(239, 68, 68, 0.2);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -114,7 +114,7 @@ body::after {
   font-size: 36px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  background: linear-gradient(to right, #fff, var(--primary-light));
+  background: linear-gradient(to right, var(--text-primary), var(--primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -131,7 +131,7 @@ body::after {
    ========================================= */
 
 .navbar {
-  background: rgba(15, 23, 42, 0.7);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--glass-border);
@@ -143,7 +143,7 @@ body::after {
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
 }
 
 .navbar-brand {
@@ -172,7 +172,7 @@ body::after {
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  color: white;
+  color: var(--text-primary);
 }
 
 .navbar-actions {
@@ -322,7 +322,7 @@ body::after {
 .restaurant-name {
   font-size: 20px;
   font-weight: 700;
-  color: white;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
@@ -405,11 +405,11 @@ body::after {
 
 .form-input, .form-select, .form-textarea {
   width: 100%;
-  background: rgba(0, 0, 0, 0.2);
+  background: #ffffff;
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
   padding: 14px 18px;
-  color: white;
+  color: var(--text-primary);
   font-size: 15px;
   font-family: inherit;
   transition: var(--transition);
@@ -418,11 +418,11 @@ body::after {
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
   border-color: var(--primary-light);
-  background: rgba(0, 0, 0, 0.4);
-  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
 }
 
-.form-select option { background: var(--bg-color-1); color: white; }
+.form-select option { background: #ffffff; color: var(--text-primary); }
 
 /* =========================================
    GRID
@@ -466,14 +466,14 @@ body::after {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: white;
+  color: var(--text-primary);
   position: relative;
   z-index: 1;
 }
 
 .ai-result {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(239, 68, 68, 0.2);
   border-left: 4px solid var(--primary);
   border-radius: var(--radius-sm);
   padding: 20px;
@@ -483,7 +483,7 @@ body::after {
   white-space: pre-wrap;
   position: relative;
   z-index: 1;
-  box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+  box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
 }
 
 /* =========================================
@@ -516,13 +516,13 @@ body::after {
 .auth-card {
   width: 100%;
   max-width: 440px;
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(255, 255, 255, 0.85);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 48px;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 0 40px rgba(239, 68, 68, 0.1);
   position: relative;
 }
 
@@ -567,7 +567,7 @@ body::after {
   border-radius: 10px;
   border: 1px solid var(--glass-border);
   background: var(--glass-bg);
-  color: white;
+  color: var(--text-primary);
   font-weight: 600;
   transition: var(--transition);
 }

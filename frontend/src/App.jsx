@@ -7,7 +7,6 @@ import RestaurantsPage from './pages/RestaurantsPage'
 import RestaurantDetailPage from './pages/RestaurantDetailPage'
 import RestaurantFormPage from './pages/RestaurantFormPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
-import HelpdeskPage from './pages/HelpdeskPage'
 import './index.css'
 
 export default function App() {
@@ -24,7 +23,6 @@ export default function App() {
           {/* Protected — requires login */}
           <Route path="/" element={<PrivateRoute><RestaurantsPage /></PrivateRoute>} />
           <Route path="/admin" element={<PrivateRoute><AdminDashboardPage /></PrivateRoute>} />
-          <Route path="/helpdesk" element={<PrivateRoute><HelpdeskPage /></PrivateRoute>} />
           <Route path="/restaurants/new" element={<PrivateRoute><RestaurantFormPage /></PrivateRoute>} />
           <Route path="/restaurants/:id" element={<PrivateRoute><RestaurantDetailPage /></PrivateRoute>} />
           <Route path="/restaurants/:id/edit" element={<PrivateRoute><RestaurantFormPage /></PrivateRoute>} />
